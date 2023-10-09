@@ -6,6 +6,12 @@ import {
   ProductCollection,
 } from "@medusajs/medusa"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
+import { Variant } from "types/medusa"
+
+import { 
+  DigitalProduct, 
+  ProductMedia,
+} from "types/product-media"
 
 export type ProductCategoryWithChildren = Omit<
   ProductCategory,
@@ -421,4 +427,26 @@ export async function getProductsByCategoryHandle({
     response,
     nextPage,
   }
+}
+
+export async function getProductMediaPreviewByVariant(
+  variant: Variant
+): Promise<ProductMedia> {
+  const { 
+    product_medias,
+  } = await medusaRequest(
+    "GET", 
+    `/product-media`,
+    {
+      query: {
+        variant_id: variant.id,
+      },
+    }
+  )
+  .then((res) => res.body)
+  .catch((err) => {
+    throw err
+  })
+
+  return product_medias[0]
 }
