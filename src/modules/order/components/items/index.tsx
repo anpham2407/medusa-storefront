@@ -18,7 +18,34 @@ const Items = ({ items, region, cartId }: ItemsProps) => {
   const enrichedItems = useEnrichedLineItems(items, cartId)
 
   const handleDownload = async (variant_id: string) => {
-    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/download/main/${variant_id}`
+
+    const apiUrl = `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/product-media/download/${variant_id}`;
+
+    // Fetch the file data
+    const { 
+      url,
+      name,
+      mime_type,
+    } = await fetch(apiUrl, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+
+      // Handle the case where the file doesn't exist
+    // or the customer didn't purchase the product
+    if (!url) {
+      console.log('error')
+    }
+
+    console.log('url', url);
+    console.log('name', name);
+    console.log('mime_type', mime_type);
+    
+
+    // Fetch the file
+    await fetch(url)
+    // return url;
+    // window.URL.revokeObjectURL(url);
   }
 
   return (
