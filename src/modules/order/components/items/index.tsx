@@ -7,6 +7,7 @@ import SkeletonLineItem from "@modules/skeletons/components/skeleton-line-item"
 import Link from "next/link"
 import medusaRequest from "../medusa-fetch"
 import Button from "@modules/common/components/button"
+import { blob } from "stream/consumers"
 
 type ItemsProps = {
   items: LineItem[]
@@ -22,28 +23,29 @@ const Items = ({ items, region, cartId }: ItemsProps) => {
     const apiUrl = `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/product-media/download/${variant_id}`;
 
     // Fetch the file data
-    const { 
-      url,
-      name,
-      mime_type,
-    } = await fetch(apiUrl, {
+    await fetch(apiUrl, {
       credentials: "include",
+    }).then((res) => res.blob()).then((blob) => {
+      // Create blob link to download
+      const blobUrl = window.URL.createObjectURL(blob);
+      const anchor = window.document.createElement('a');
+      anchor.download = 'tét';
+      anchor.href = blobUrl;
+      anchor.click();
+      window.URL.revokeObjectURL(blobUrl);
     })
-      .then((res) => res.json())
 
       // Handle the case where the file doesn't exist
     // or the customer didn't purchase the product
-    if (!url) {
-      console.log('error')
-    }
+    // if (!url) {
+    //   console.log('error')
+    // }
 
-    console.log('url', url);
-    console.log('name', name);
-    console.log('mime_type', mime_type);
+    // console.log('url', url);
+    // console.log('name', name);
+    // console.log('mime_type', mime_type);
     
 
-    // Fetch the file
-    await fetch(url)
     // return url;
     // window.URL.revokeObjectURL(url);
   }
