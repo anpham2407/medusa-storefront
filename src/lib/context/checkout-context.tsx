@@ -1,14 +1,16 @@
 "use client"
 
 import { medusaClient } from "@lib/config"
-import useToggleState, { StateType } from "@lib/hooks/use-toggle-state"
-import {
-  Address,
+import useToggleState, { 
+  StateType,
+} from "@lib/hooks/use-toggle-state"
+import { 
   Cart,
   Customer,
   StorePostCartsCartReq,
 } from "@medusajs/medusa"
-import Wrapper from "@modules/checkout/components/payment-wrapper"
+import Wrapper 
+  from "@modules/checkout/components/payment-wrapper"
 import { isEqual } from "lodash"
 import {
   formatAmount,
@@ -20,45 +22,53 @@ import {
   useUpdateCart,
 } from "medusa-react"
 import { useRouter } from "next/navigation"
-import React, { createContext, useContext, useEffect, useMemo } from "react"
-import { FormProvider, useForm, useFormContext } from "react-hook-form"
+import React, { 
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+} from "react"
+import { 
+  FormProvider, 
+  useForm, 
+  useFormContext,
+} from "react-hook-form"
 import { useStore } from "./store-context"
 
 type AddressValues = {
   first_name: string
   last_name: string
-  company: string
-  address_1: string
-  address_2: string
-  city: string
-  province: string
-  postal_code: string
   country_code: string
-  phone: string
 }
 
 export type CheckoutFormValues = {
   shipping_address: AddressValues
-  billing_address: AddressValues
+  billing_address?: AddressValues
   email: string
 }
 
 interface CheckoutContext {
   cart?: Omit<Cart, "refundable_amount" | "refunded_total">
-  shippingMethods: { label?: string; value?: string; price: string }[]
+  shippingMethods: { 
+    label?: string;
+    value?: string;
+    price: string
+  }[]
   isLoading: boolean
   readyToComplete: boolean
   sameAsBilling: StateType
   editAddresses: StateType
   initPayment: () => Promise<void>
   setAddresses: (addresses: CheckoutFormValues) => void
-  setSavedAddress: (address: Address) => void
+  setSavedAddress: (address: AddressValues) => void
   setShippingOption: (soId: string) => void
   setPaymentSession: (providerId: string) => void
   onPaymentCompleted: () => void
 }
 
-const CheckoutContext = createContext<CheckoutContext | null>(null)
+const CheckoutContext = createContext<
+  CheckoutContext | null
+>(null)
 
 interface CheckoutProviderProps {
   children?: React.ReactNode
@@ -66,7 +76,9 @@ interface CheckoutProviderProps {
 
 const IDEMPOTENCY_KEY = "create_payment_session_key"
 
-export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
+export const CheckoutProvider = ({
+  children,
+}: CheckoutProviderProps) => {
   const {
     cart,
     setCart,
@@ -74,7 +86,10 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
       mutate: setShippingMethod,
       isLoading: addingShippingMethod,
     },
-    completeCheckout: { mutate: complete, isLoading: completingCheckout },
+    completeCheckout: { 
+      mutate: complete, 
+      isLoading: completingCheckout,
+    },
   } = useCart()
 
   const { customer } = useMeCustomer()
@@ -90,11 +105,16 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
     isLoading: settingPaymentSession,
   } = useSetPaymentSession(cart?.id!)
 
-  const { mutate: updateCart, isLoading: updatingCart } = useUpdateCart(
+  const { 
+    mutate: updateCart,
+    isLoading: updatingCart,
+  } = useUpdateCart(
     cart?.id!
   )
 
-  const { shipping_options } = useCartShippingOptions(cart?.id!, {
+  const { 
+    shipping_options,
+  } = useCartShippingOptions(cart?.id!, {
     enabled: !!cart?.id,
   })
 
@@ -111,7 +131,8 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   )
 
   /**
-   * Boolean that indicates if a part of the checkout is loading.
+   * Boolean that indicates if a 
+   * part of the checkout is loading.
    */
   const isLoading = useMemo(() => {
     return (
@@ -128,8 +149,10 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   ])
 
   /**
-   * Boolean that indicates if the checkout is ready to be completed. A checkout is ready to be completed if
-   * the user has supplied a email, shipping address, billing address, shipping method, and a method of payment.
+   * Boolean that indicates if the checkout is ready to be
+   * completed. A checkout is ready to be completed if
+   * the user has supplied a email, shipping address, 
+   * billing address, shipping method, and a method of payment.
    */
   const readyToComplete = useMemo(() => {
     return (
@@ -182,7 +205,9 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   }, [cart])
 
   /**
-   * Method to set the selected shipping method for the cart. This is called when the user selects a shipping method, such as UPS, FedEx, etc.
+   * Method to set the selected shipping method for the cart.
+   * This is called when the user selects a shipping method,
+   * such as UPS, FedEx, etc.
    */
   const setShippingOption = (soId: string) => {
     if (cart) {
@@ -196,7 +221,9 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   }
 
   /**
-   * Method to create the payment sessions available for the cart. Uses a idempotency key to prevent duplicate requests.
+   * Method to create the payment sessions available for the
+   * cart. Uses a idempotency key to prevent 
+   * duplicate requests.
    */
   const createPaymentSession = async (cartId: string) => {
     return medusaClient.carts
@@ -208,7 +235,8 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   }
 
   /**
-   * Method that calls the createPaymentSession method and updates the cart with the payment session.
+   * Method that calls the createPaymentSession method and
+   * updates the cart with the payment session.
    */
   const initPayment = async () => {
     if (cart?.id && !cart.payment_sessions?.length && cart?.items?.length) {
@@ -224,7 +252,9 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   }
 
   /**
-   * Method to set the selected payment session for the cart. This is called when the user selects a payment provider, such as Stripe, PayPal, etc.
+   * Method to set the selected payment session for the cart.
+   * This is called when the user selects a payment provider,
+   * such as Stripe, PayPal, etc.
    */
   const setPaymentSession = (providerId: string) => {
     if (cart) {
@@ -244,30 +274,27 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   const prepareFinalSteps = () => {
     initPayment()
 
-    if (shippingMethods?.length && shippingMethods?.[0]?.value) {
+    if (
+      shippingMethods?.length && shippingMethods?.[0]?.value
+    ) {
       setShippingOption(shippingMethods[0].value)
     }
   }
 
-  const setSavedAddress = (address: Address) => {
+  const setSavedAddress = (address: AddressValues) => {
     const setValue = methods.setValue
 
     setValue("shipping_address", {
-      address_1: address.address_1 || "",
-      address_2: address.address_2 || "",
-      city: address.city || "",
       country_code: address.country_code || "",
       first_name: address.first_name || "",
       last_name: address.last_name || "",
-      phone: address.phone || "",
-      postal_code: address.postal_code || "",
-      province: address.province || "",
-      company: address.company || "",
     })
   }
 
   /**
-   * Method that validates if the cart's region matches the shipping address's region. If not, it will update the cart region.
+   * Method that validates if the cart's region matches the 
+   * shipping address's region. If not, it will update the
+   * cart region.
    */
   const validateRegion = (countryCode: string) => {
     if (regions && cart) {
@@ -311,7 +338,8 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   }
 
   /**
-   * Method to complete the checkout process. This is called when the user clicks the "Complete Checkout" button.
+   * Method to complete the checkout process. This is called
+   * when the user clicks the "Complete Checkout" button.
    */
   const onPaymentCompleted = () => {
     complete(undefined, {
@@ -340,7 +368,11 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
           onPaymentCompleted,
         }}
       >
-        <Wrapper paymentSession={cart?.payment_session}>{children}</Wrapper>
+        <Wrapper
+          paymentSession={cart?.payment_session}
+        >
+          {children}
+        </Wrapper>
       </CheckoutContext.Provider>
     </FormProvider>
   )
@@ -358,7 +390,9 @@ export const useCheckout = () => {
 }
 
 /**
- * Method to map the fields of a potential customer and the cart to the checkout form values. Information is assigned with the following priority:
+ * Method to map the fields of a potential customer and 
+ * the cart to the checkout form values. Information is 
+ * assigned with the following priority:
  * 1. Cart information
  * 2. Customer information
  * 3. Default values - null
@@ -368,8 +402,10 @@ const mapFormValues = (
   cart?: Omit<Cart, "refundable_amount" | "refunded_total">,
   currentCountry?: string
 ): CheckoutFormValues => {
-  const customerShippingAddress = customer?.shipping_addresses?.[0]
-  const customerBillingAddress = customer?.billing_address
+  const customerShippingAddress = 
+    customer?.shipping_addresses?.[0]
+  const customerBillingAddress = 
+    customer?.billing_address
 
   return {
     shipping_address: {
@@ -381,34 +417,11 @@ const mapFormValues = (
         cart?.shipping_address?.last_name ||
         customerShippingAddress?.last_name ||
         "",
-      address_1:
-        cart?.shipping_address?.address_1 ||
-        customerShippingAddress?.address_1 ||
-        "",
-      address_2:
-        cart?.shipping_address?.address_2 ||
-        customerShippingAddress?.address_2 ||
-        "",
-      city: cart?.shipping_address?.city || customerShippingAddress?.city || "",
       country_code:
         currentCountry ||
         cart?.shipping_address?.country_code ||
         customerShippingAddress?.country_code ||
         "",
-      province:
-        cart?.shipping_address?.province ||
-        customerShippingAddress?.province ||
-        "",
-      company:
-        cart?.shipping_address?.company ||
-        customerShippingAddress?.company ||
-        "",
-      postal_code:
-        cart?.shipping_address?.postal_code ||
-        customerShippingAddress?.postal_code ||
-        "",
-      phone:
-        cart?.shipping_address?.phone || customerShippingAddress?.phone || "",
     },
     billing_address: {
       first_name:
@@ -419,31 +432,10 @@ const mapFormValues = (
         cart?.billing_address?.last_name ||
         customerBillingAddress?.last_name ||
         "",
-      address_1:
-        cart?.billing_address?.address_1 ||
-        customerBillingAddress?.address_1 ||
-        "",
-      address_2:
-        cart?.billing_address?.address_2 ||
-        customerBillingAddress?.address_2 ||
-        "",
-      city: cart?.billing_address?.city || customerBillingAddress?.city || "",
       country_code:
         cart?.shipping_address?.country_code ||
         customerBillingAddress?.country_code ||
         "",
-      province:
-        cart?.shipping_address?.province ||
-        customerBillingAddress?.province ||
-        "",
-      company:
-        cart?.billing_address?.company || customerBillingAddress?.company || "",
-      postal_code:
-        cart?.billing_address?.postal_code ||
-        customerBillingAddress?.postal_code ||
-        "",
-      phone:
-        cart?.billing_address?.phone || customerBillingAddress?.phone || "",
     },
     email: cart?.email || customer?.email || "",
   }

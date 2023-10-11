@@ -8,6 +8,11 @@ import Link from "next/link"
 import React, { useMemo } from "react"
 import { Product } from "types/medusa"
 
+import ProductMediaPreview from "../product-media-preview"
+import { getProductMediaPreviewByVariant } from "@lib/data"
+import { useEffect, useState } from "react"
+import { ProductMedia } from "types/product-media"
+
 type ProductActionsProps = {
   product: PricedProduct
 }
@@ -23,6 +28,22 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
 
     return variantPrice || cheapestPrice || null
   }, [price])
+
+  const [productMedia, setProductMedia] = useState<
+    ProductMedia
+  >({})
+
+  useEffect(() => {
+    const getProductMedia = async () => {
+      if (!variant) {return}
+      await getProductMediaPreviewByVariant(variant)
+      .then((res) => {
+        setProductMedia(res)
+      })
+    }
+    getProductMedia()
+  }, [variant])
+
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -83,6 +104,10 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
           <div></div>
         )}
       </div>
+          {console.log('sss', productMedia)}
+      {productMedia && (
+        <ProductMediaPreview media={productMedia} />
+      )}
 
       <Button onClick={addToCart}>
         {!inStock ? "Out of stock" : "Add to cart"}
