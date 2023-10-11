@@ -17,37 +17,24 @@ type ItemsProps = {
 
 const Items = ({ items, region, cartId }: ItemsProps) => {
   const enrichedItems = useEnrichedLineItems(items, cartId)
-
-  const handleDownload = async (variant_id: string) => {
+  const handleDownload = async (variant_id: string, item: any) => {
 
     const apiUrl = `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/product-media/download/${variant_id}`;
-
-    // Fetch the file data
     await fetch(apiUrl, {
       credentials: "include",
     }).then((res) => res.blob()).then((blob) => {
       // Create blob link to download
       const blobUrl = window.URL.createObjectURL(blob);
       const anchor = window.document.createElement('a');
-      anchor.download = 'tét';
+      var currentDate = new Date();
+      var day = currentDate.getDate()
+      var month = currentDate.getMonth() + 1
+      var year = currentDate.getFullYear()
+      anchor.download = `${item.title}_${day}-${month}-${year}`;
       anchor.href = blobUrl;
       anchor.click();
       window.URL.revokeObjectURL(blobUrl);
     })
-
-      // Handle the case where the file doesn't exist
-    // or the customer didn't purchase the product
-    // if (!url) {
-    //   console.log('error')
-    // }
-
-    // console.log('url', url);
-    // console.log('name', name);
-    // console.log('mime_type', mime_type);
-    
-
-    // return url;
-    // window.URL.revokeObjectURL(url);
   }
 
   return (
@@ -77,7 +64,7 @@ const Items = ({ items, region, cartId }: ItemsProps) => {
                         <LineItemPrice region={region} item={item} />
                         <Button 
                           variant="secondary" 
-                          onClick={() => handleDownload(item.variant.id)}>
+                          onClick={() => handleDownload(item.variant.id, item)}>
                           Download
                         </Button>
                       </div>
