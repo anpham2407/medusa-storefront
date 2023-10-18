@@ -26,11 +26,11 @@ const Container = ({ children }: ContainerProps) => {
         <Transition.Child
           as={Fragment}
           enter="transition ease-in-out duration-500 transform"
-          enterFrom="-translate-x-full"
+          enterFrom="translate-x-full"
           enterTo="translate-x-0"
           leave="transition ease-in-out duration-500 transform"
           leaveFrom="translate-x-0"
-          leaveTo="-translate-x-full"
+          leaveTo="translate-x-full"
         >
           <div className="absolute inset-0 overflow-hidden trans">
             <div className="pointer-events-none fixed inset-y-0 right-left flex max-w-full">

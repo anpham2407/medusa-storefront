@@ -48,7 +48,7 @@ const InfiniteProducts = ({ params }: InfiniteProductsType) => {
     )
 
   const previews = usePreviews({ pages: data?.pages, region: cart?.region })
-
+  console.log(data)
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage()

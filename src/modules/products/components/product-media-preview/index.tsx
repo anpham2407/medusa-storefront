@@ -12,7 +12,7 @@ const ProductMediaPreview: React.FC<Props> = ({ media }) => {
 
   return (
     <div>
-      <Button variant="secondary" onClick={downloadPreview}>
+      <Button variant="medium" onClick={downloadPreview}>
         Download free preview
       </Button>
     </div>

@@ -1,0 +1,16 @@
+{
+  "layout": {
+    "navbar": {
+      "category": "Danh mục",
+      "signin": "Đăng nhập",
+      "trans": "Tiếng Việt"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Finding resources for your next project? VN",
+      "content": "Discover thousands of digital products made by world-class creators VN",
+      "discover": "Discover products VN"
+    }
+  }
+}

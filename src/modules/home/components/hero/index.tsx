@@ -1,34 +1,32 @@
+import Button from "@modules/common/components/button"
+import Typography from "@modules/common/components/typography"
 import UnderlineLink from "@modules/common/components/underline-link"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 
 const Hero = () => {
+  const t = useTranslations("home.hero")
   return (
-    <div className="h-[90vh] w-full relative">
-      <div className="text-white absolute inset-0 z-10 flex flex-col justify-center items-center text-center small:text-left small:justify-end small:items-start small:p-32">
-        <h1 className="text-2xl-semi mb-4 drop-shadow-md shadow-black">
-          Introducing the Latest Summer Styles
-        </h1>
-        <p className="text-base-regular max-w-[32rem] mb-6 drop-shadow-md shadow-black">
-          This season, our new summer collection embraces designs to provide
-          comfort and style - ensuring you&apos;re well-prepared for whatever
-          comes your way.
-        </p>
-        <UnderlineLink href="/store">Explore products</UnderlineLink>
+    <div className="flex flex-col items-center bg-gray-100 h-screen justify-center">
+      <div className="relative w-60 h-60">
+        <Image
+          src="/illustration.svg"
+          alt={"hero illustration"}
+          fill
+          className="object-contain"
+        />
       </div>
-      <Image
-        src="/hero.webp"
-        loading="eager"
-        priority={true}
-        quality={90}
-        alt="Photo by @thevoncomplex https://unsplash.com/@thevoncomplex"
-        className="absolute inset-0"
-        draggable="false"
-        fill
-        sizes="100vw"
-        style={{
-          objectFit: "cover",
-        }}
-      />
+      <div className="flex flex-col gap-4 items-center">
+        <Typography variant="h2" className="text-center">
+          {t("title")}
+        </Typography>
+        <Typography variant="body1" className="text-center">
+          {t("content")}
+        </Typography>
+        <Button variant="large" className="w-fit">
+          {t("discover")}
+        </Button>
+      </div>
     </div>
   )
 }

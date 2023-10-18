@@ -3,6 +3,7 @@ import Container from "@modules/mobile-menu/components/container"
 import MainMenu from "@modules/mobile-menu/components/main-menu"
 import CountryMenu from "../components/country-menu"
 import SearchMenu from "../components/search-menu"
+import LanguageMenu from "../components/language-menu"
 
 const MobileMenu = () => {
   const {
@@ -18,6 +19,8 @@ const MobileMenu = () => {
               return <CountryMenu />
             case "search":
               return <SearchMenu />
+            case "language":
+              return <LanguageMenu />
             default:
               return <MainMenu />
           }
