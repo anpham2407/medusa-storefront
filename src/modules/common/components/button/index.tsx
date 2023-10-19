@@ -4,26 +4,27 @@ import React from "react"
 
 type ButtonProps = {
   isLoading?: boolean
-  variant?: "primary" | "secondary"
+  variant?: "medium" | "large" | "small"
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const Button = ({
   children,
   className,
   isLoading = false,
-  variant = "primary",
+  variant = "medium",
   ...props
 }: ButtonProps) => {
   return (
     <button
       {...props}
       className={clsx(
-        "w-full uppercase flex items-center justify-center min-h-[50px] px-5 py-[10px] text-small-regular border transition-colors duration-200 disabled:opacity-50",
+        "bg-primary-main text-white rounded-lg",
         {
-          "text-white bg-gray-900 border-gray-900 hover:bg-white hover:text-gray-900 disabled:hover:bg-gray-900 disabled:hover:text-white":
-            variant === "primary",
-          "text-gray-900 bg-transparent border-gray-920 hover:bg-gray-100":
-            variant === "secondary",
+          "py-1 px-2 text-[13px] leading-[22px] font-bold": variant === "small",
+          "text-[14px] leading-[24px] font-bold py-[6px] px-4":
+            variant === "medium",
+          "text-[15px] leading-[26px] font-bold px-[22px] py-[11px]":
+            variant === "large",
         },
         className
       )}

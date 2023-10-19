@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer utilities {
+  body{
+    @apply text-text-primary
+  }
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -110,3 +113,4 @@
     @apply text-[36px] leading-[48px] font-semibold;
   }
 }
+

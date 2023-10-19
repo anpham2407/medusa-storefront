@@ -1,0 +1,16 @@
+{
+  "layout": {
+    "navbar": {
+      "category": "Category",
+      "signin": "Sign in",
+      "trans": "English"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Finding resources for your next project?",
+      "content": "Discover thousands of digital products made by world-class creators",
+      "discover": "Discover products"
+    }
+  }
+}

@@ -2,16 +2,18 @@ import { useMobileMenu } from "@lib/context/mobile-menu-context"
 import { useStore } from "@lib/context/store-context"
 import useCountryOptions from "@lib/hooks/use-country-options"
 import ChevronDown from "@modules/common/icons/chevron-down"
+import Logo from "@modules/common/icons/logo"
 import Search from "@modules/common/icons/search"
 import X from "@modules/common/icons/x"
 import { useCollections, useMeCustomer } from "medusa-react"
+import { useLocale } from "next-intl"
 import Link from "next/link"
 import ReactCountryFlag from "react-country-flag"
-
 const MainMenu = () => {
   const { collections } = useCollections()
   const { customer } = useMeCustomer()
   const { countryCode } = useStore()
+  const locale = useLocale()
 
   const countries = useCountryOptions()
 
@@ -22,21 +24,24 @@ const MainMenu = () => {
 
   const setScreenCountry = () => setScreen("country")
   const setScreenSearch = () => setScreen("search")
+  const setScreenLanguage = () => setScreen("language")
 
   return (
     <div className="flex flex-col flex-1">
       <div className="flex items-center justify-between w-full border-b border-gray-200 py-4 px-6">
         <div className="flex-1 basis-0">
-          <button
+          {/* <button
             className="flex items-center gap-x-2"
             onClick={setScreenCountry}
           >
             <ReactCountryFlag countryCode={countryCode || "us"} svg />
             <ChevronDown />
-          </button>
+          </button> */}
         </div>
         <div>
-          <h1 className="text-xl-semi uppercase">Acme</h1>
+          <Link href="/">
+            <Logo />
+          </Link>
         </div>
         <div className="flex-1 basis-0 flex justify-end">
           <button onClick={close}>
@@ -126,7 +131,7 @@ const MainMenu = () => {
                 </Link>
               </div>
             )}
-            <div className="flex flex-col gap-y-4">
+            {/* <div className="flex flex-col gap-y-4">
               <span className="text-gray-700 uppercase">Delivery</span>
               <button
                 className="flex items-center justify-between border-b border-gray-200 py-2"
@@ -140,6 +145,21 @@ const MainMenu = () => {
                   <span className="normal-case">
                     Shipping to{" "}
                     {countries?.find((c) => c.country === countryCode)?.label}
+                  </span>
+                </div>
+                <ChevronDown className="-rotate-90" />
+              </button>
+            </div> */}
+            <div className="flex flex-col gap-y-4">
+              <span className="text-gray-700 uppercase">Language</span>
+              <button
+                className="flex items-center justify-between border-b border-gray-200 py-2"
+                onClick={setScreenLanguage}
+              >
+                <span className="sr-only">Click to select language</span>
+                <div className="flex items-center gap-x-2">
+                  <span className="normal-case">
+                    {locale === "en" ? "English" : "Tiếng Việt"}
                   </span>
                 </div>
                 <ChevronDown className="-rotate-90" />
